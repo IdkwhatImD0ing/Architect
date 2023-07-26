@@ -10,6 +10,8 @@ dotenv.load_dotenv()
 llm = ChatOpenAI(temperature=0, max_tokens=1000, model="gpt-3.5-turbo")
 advanced_llm = ChatOpenAI(temperature=0, max_tokens=1000, model="gpt-4")
 
+left_col, right_col = st.columns(2)
+
 async def get_backend_results():
     output = await backend_chain(inputs = {
         'project_details': project_details,
@@ -21,22 +23,22 @@ async def get_backend_results():
     advanced_llm=advanced_llm)
     output_json = json.loads(output)
     if output_json["approval"] == "1":
-        st.success('Backend approved! This project is feasible according to the hackathon time period.', icon="✅")
+        right_col.success('Backend approved! This project is feasible according to the hackathon time period.', icon="✅")
     else:
-        st.error('Backend not approved! This project is not feasible according to the hackathon time period.', icon="🚨")
+        right_col.error('Backend not approved! This project is not feasible according to the hackathon time period.', icon="🚨")
 
-        with st.container():
-            st.text('Comments 👇')
-            st.info(output_json["comments"], icon="ℹ️")
+        with right_col.container():
+            right_col.text('Comments 👇')
+            right_col.info(output_json["comments"], icon="ℹ️")
 
-    with st.container():
-        st.text('Backend features 👇')
-        st.caption(output_json["features"])
+    with right_col.container():
+        right_col.text('Backend features 👇')
+        right_col.caption(output_json["features"])
         
-        st.divider()
+        right_col.divider()
 
-        st.text('Backend specifications 👇')
-        st.caption(output_json["specifications"])
+        right_col.text('Backend specifications 👇')
+        right_col.caption(output_json["specifications"])
     
 
 async def get_frontend_results():
@@ -50,22 +52,22 @@ async def get_frontend_results():
     advanced_llm=advanced_llm)
     output_json = json.loads(output)
     if output_json["approval"] == "1":
-        st.success('Frontend approved! This project is feasible according to the hackathon time period.', icon="✅")
+        left_col.success('Frontend approved! This project is feasible according to the hackathon time period.', icon="✅")
     else:
-        st.error('Frontend not approved! This project is not feasible according to the hackathon time period.', icon="🚨")
+        left_col.error('Frontend not approved! This project is not feasible according to the hackathon time period.', icon="🚨")
 
-        with st.container():
-            st.text('Comments 👇')
-            st.info(output_json["comments"], icon="ℹ️")
+        with left_col.container():
+            left_col.text('Comments 👇')
+            left_col.info(output_json["comments"], icon="ℹ️")
 
-    with st.container():
-        st.text('Frontend features 👇')
-        st.caption(output_json["features"])
+    with left_col.container():
+        left_col.text('Frontend features 👇')
+        left_col.caption(output_json["features"])
         
-        st.divider()
+        left_col.divider()
 
-        st.text('Frontend specifications 👇')
-        st.caption(output_json["specifications"])
+        left_col.text('Frontend specifications 👇')
+        left_col.caption(output_json["specifications"])
 
 
 async def run_tasks():
