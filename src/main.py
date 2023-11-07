@@ -7,13 +7,13 @@ from frontend_chain import frontend_chain
 import dotenv
 dotenv.load_dotenv()
 
-llm = ChatOpenAI(temperature=0, max_tokens=1000, model="gpt-3.5-turbo")
-advanced_llm = ChatOpenAI(temperature=0, max_tokens=1000, model="gpt-4")
+llm = ChatOpenAI(temperature=0, max_tokens=1000, model="gpt-4")
+advanced_llm = ChatOpenAI(temperature=0, max_tokens=1000, model="gpt-4-1106-preview")
 
 left_col, right_col = st.columns(2)
 
 async def get_backend_results():
-    output = await backend_chain(inputs = {
+    output_json = await backend_chain(inputs = {
         'project_details': project_details,
         "project_technologies": project_technologies,
         "group_size": group_size,
@@ -21,7 +21,6 @@ async def get_backend_results():
     },
     llm=llm,
     advanced_llm=advanced_llm)
-    output_json = json.loads(output)
     if output_json["approval"] == "1":
         right_col.success('Backend approved! This project is feasible according to the hackathon time period.', icon="✅")
     else:
@@ -42,7 +41,7 @@ async def get_backend_results():
     
 
 async def get_frontend_results():
-    output = await frontend_chain(inputs = {
+    output_json = await frontend_chain(inputs = {
         'project_details': project_details,
         "project_technologies": project_technologies,
         "group_size": group_size,
@@ -50,7 +49,6 @@ async def get_frontend_results():
     },
     llm=llm,
     advanced_llm=advanced_llm)
-    output_json = json.loads(output)
     if output_json["approval"] == "1":
         left_col.success('Frontend approved! This project is feasible according to the hackathon time period.', icon="✅")
     else:

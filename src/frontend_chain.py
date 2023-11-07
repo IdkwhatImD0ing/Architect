@@ -1,26 +1,8 @@
 from __future__ import annotations
-import openai
-from langchain.agents import Tool
-import os
-import dotenv
-dotenv.load_dotenv()
-from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-import asyncio
-
-
-from typing import Any, Dict, List, Optional
-
-from pydantic import Extra
-
-from langchain.schema import BaseLanguageModel
-from langchain.callbacks.manager import (
-    AsyncCallbackManagerForChainRun,
-    CallbackManagerForChainRun,
-)
-from langchain.chains.base import Chain
-from langchain.schema import BasePromptTemplate
+from typing import Any, Dict
+from langchain.schema.language_model import BaseLanguageModel
 import json
 
 
@@ -93,6 +75,10 @@ async def frontend_chain(
             'group_experience': inputs['group_experience']
         })
         
+        if '```json' in approval:
+            approval = approval.split('```json')[1]
+            approval = approval.split('```')[0]
+        
         approvals_object = json.loads(approval)
         
         return_obj = {
@@ -103,4 +89,4 @@ async def frontend_chain(
             'specifications': specification
         }
         
-        return json.dumps(return_obj)
+        return return_obj
